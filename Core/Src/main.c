@@ -82,6 +82,28 @@ static void MX_TIM7_Init(void);
 /**
   * @brief  The application entry point.
   * @retval int
+  *
+  *
+  To avoid modem manager issues :
+
+  write
+
+	KERNEL=="ttyACM*", ENV{ID_MM_DEVICE_IGNORE}="1"
+	#STM32 with idVendor:idProduct 0483:5710
+	ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5710", ENV{ID_MM_DEVICE_IGNORE}="1"
+	ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5710", ENV{ID_MM_TTY_BLACKLIST}="1"
+	ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5710", ENV{MTP_NO_PROBE}="1"
+	ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5710", ENV{ID_MM_PORT_IGNORE}="1"
+	ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5710", ENV{ID_MM_TTY_MANUAL_SCAN_ONLY}="1"
+
+  in the file
+
+	/etc/udev/rules.d/01-disable-mm-ttyACM.rules
+
+  then
+
+ 	 sudo udevadm control --reload-rules
+
   */
 int main(void)
 {
