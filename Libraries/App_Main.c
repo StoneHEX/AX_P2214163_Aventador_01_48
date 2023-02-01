@@ -98,8 +98,8 @@ void App_Init(void)
 	ADC_Start();
 }
 
-uint8_t count_voltages = 0;
-uint8_t	vprint = 0;
+//uint8_t count_voltages = 0;
+//uint8_t	vprint = 0;
 
 void App_Loop(void)
 {
@@ -112,18 +112,6 @@ void App_Loop(void)
 			System.system_flags &= ~ADC1_FLAG;
 			ADC_GetValues();
 		}
-		if (( System.usb_flags & USB_FLAGS_DTR_CHANGE) == USB_FLAGS_DTR_CHANGE)
-		{
-			Debug_PrintVoltages(vprint);
-			System.usb_flags &= ~USB_FLAGS_DTR_CHANGE;
-		}
-		/*
-		if (( System.usb_flags & USB_FLAGS_RTS_CHANGE) == USB_FLAGS_RTS_CHANGE)
-		{
-			force_poweron();
-			System.usb_flags &= ~USB_FLAGS_RTS_CHANGE;
-		}
-		*/
 		PowerStateMachine();
 	}
 	if (( System.system_flags & CHECK_RESET_FLAG ) == CHECK_RESET_FLAG)
@@ -133,7 +121,6 @@ void App_Loop(void)
 			CarrierPowerOn();
 			enable_mco();
 			System.system_flags |= USB_ENABLE_FLAG;
-			USB_Bridge();
 		}
 		else
 		{
@@ -148,5 +135,5 @@ void App_Loop(void)
 		CarrierPowerOff();
 		hiz_mco();
 	}
-
+	USB_Bridge();
 }

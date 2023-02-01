@@ -10,7 +10,7 @@
 
 
 extern	void PowerStateMachine(void);
-extern	void Debug_PrintVoltages(uint8_t state);
+extern	void Debug_PrintVoltages(void);
 extern	void BoardPowerOn(void);
 extern	void BoardPowerOff(void);
 extern	void CarrierPowerOn(void);

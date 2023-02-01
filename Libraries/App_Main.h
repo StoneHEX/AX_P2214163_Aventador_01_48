@@ -91,6 +91,7 @@ typedef struct _SystemTypeDef
 	uint16_t		tick1Sec_cntr;
 	uint16_t		tick10Sec_cntr;
 	uint16_t		adc1[ADC1_INPUTS];
+	uint8_t			adc1_buf[USB_BUF_LEN];
 	uint8_t			usb_rx_buf[USB_BUF_LEN+8];
 	uint8_t			usb_rx_buf_len;
 	uint8_t			usb_rx_buf_index;

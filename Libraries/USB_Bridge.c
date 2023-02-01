@@ -50,18 +50,44 @@ void USB_Bridge(void)
 uint8_t		buflen;
 	if (( System.system_flags & USB_ENABLE_FLAG) == USB_ENABLE_FLAG)
 	{
-		HAL_UART_Receive(&SERIAL_PORT, System.uart_rx_buf, RING_BUFFER_LEN,5);
-		buflen = RING_BUFFER_LEN - SERIAL_PORT.RxXferCount;
-		CDC_Transmit_FS(System.uart_rx_buf,buflen);
-	}
-
-	if (( System.system_flags & USB_ENABLE_FLAG) == USB_ENABLE_FLAG)
-	{
 		if (( System.usb_flags & USB_FLAGS_RX_BUF) == USB_FLAGS_RX_BUF)
 		{
 			HAL_UART_Transmit_DMA(&SERIAL_PORT, System.usb_rx_buf, System.usb_rx_buf_len);
 			System.usb_flags &= ~USB_FLAGS_RX_BUF;
 		}
+
+		if (( System.usb_flags & USB_FLAGS_DTR_CHANGE) == USB_FLAGS_DTR_CHANGE)
+		{
+			/* FIXME */
+			HAL_Delay(50);
+			Debug_PrintVoltages();
+			System.usb_flags &= ~USB_FLAGS_DTR_CHANGE;
+			HAL_Delay(50);
+			/* FIXME END */
+		}
+		else
+		{
+			HAL_UART_Receive(&SERIAL_PORT, System.uart_rx_buf, RING_BUFFER_LEN,5);
+			buflen = RING_BUFFER_LEN - SERIAL_PORT.RxXferCount;
+			CDC_Transmit_FS(System.uart_rx_buf,buflen);
+		}
 	}
+	else
+	{
+		if (( System.usb_flags & USB_FLAGS_DTR_CHANGE) == USB_FLAGS_DTR_CHANGE)
+		{
+			Debug_PrintVoltages();
+			System.usb_flags &= ~USB_FLAGS_DTR_CHANGE;
+		}
+	}
+
+
+	/*
+	if (( System.usb_flags & USB_FLAGS_RTS_CHANGE) == USB_FLAGS_RTS_CHANGE)
+	{
+		force_poweron();
+		System.usb_flags &= ~USB_FLAGS_RTS_CHANGE;
+	}
+	*/
 }
 

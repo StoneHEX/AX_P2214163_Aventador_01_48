@@ -32,4 +32,10 @@ void ADC_GetValues(void)
 	System.SENSE_5V   = (float )System.adc1[SENSE_5V_IDX]  * SENSE_5V_VAL;
 	System.SENSE_1V8  = (float )System.adc1[SENSE_1V8_IDX]  * SENSE_1V8_VAL;
 	System.SENSE_1V2  = (float )System.adc1[SENSE_1V2_IDX]  * SENSE_1V2_VAL;
+
+	sprintf((char *)System.adc1_buf,"Board : %s\n\rVoltage Monitor\r\n1V2: %2.2f\r\n1V8: %2.2f\r\n3V3: %2.2f\r\n5V : %2.2f\r\nVIN: %2.2f\r\nHw %s\n\rSW %s\r\n\r\n",
+			BOARD_NAME,
+			System.SENSE_1V2,System.SENSE_1V8,System.SENSE_3V3,System.SENSE_5V,System.SENSE_VIN,
+			HW_VERSION,
+			SW_VERSION);
 }
