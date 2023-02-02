@@ -7,16 +7,19 @@
 C_SRCS += \
 ../Libraries/App_Main.c \
 ../Libraries/Power_StateMachine.c \
+../Libraries/Term_Menus.c \
 ../Libraries/USB_Bridge.c 
 
 OBJS += \
 ./Libraries/App_Main.o \
 ./Libraries/Power_StateMachine.o \
+./Libraries/Term_Menus.o \
 ./Libraries/USB_Bridge.o 
 
 C_DEPS += \
 ./Libraries/App_Main.d \
 ./Libraries/Power_StateMachine.d \
+./Libraries/Term_Menus.d \
 ./Libraries/USB_Bridge.d 
 
 
@@ -27,7 +30,7 @@ Libraries/%.o Libraries/%.su: ../Libraries/%.c Libraries/subdir.mk
 clean: clean-Libraries
 
 clean-Libraries:
-	-$(RM) ./Libraries/App_Main.d ./Libraries/App_Main.o ./Libraries/App_Main.su ./Libraries/Power_StateMachine.d ./Libraries/Power_StateMachine.o ./Libraries/Power_StateMachine.su ./Libraries/USB_Bridge.d ./Libraries/USB_Bridge.o ./Libraries/USB_Bridge.su
+	-$(RM) ./Libraries/App_Main.d ./Libraries/App_Main.o ./Libraries/App_Main.su ./Libraries/Power_StateMachine.d ./Libraries/Power_StateMachine.o ./Libraries/Power_StateMachine.su ./Libraries/Term_Menus.d ./Libraries/Term_Menus.o ./Libraries/Term_Menus.su ./Libraries/USB_Bridge.d ./Libraries/USB_Bridge.o ./Libraries/USB_Bridge.su
 
 .PHONY: clean-Libraries
 

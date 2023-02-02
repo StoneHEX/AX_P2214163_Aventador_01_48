@@ -32,6 +32,7 @@
 "./Drivers/STM32U5xx_HAL_Driver/Src/stm32u5xx_ll_usb.o"
 "./Libraries/App_Main.o"
 "./Libraries/Power_StateMachine.o"
+"./Libraries/Term_Menus.o"
 "./Libraries/USB_Bridge.o"
 "./Libraries/Drivers/Devices/adc_dma.o"
 "./Libraries/Drivers/Devices/irqs.o"

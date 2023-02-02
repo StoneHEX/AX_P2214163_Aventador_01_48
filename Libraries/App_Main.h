@@ -28,6 +28,7 @@ extern	TIM_HandleTypeDef htim7;
 #define	TICK_TIMER		htim6
 #define	CDC_TIMER		htim7
 #define	SERIAL_PORT		huart1
+#define	SERIAL_PORT_TO	10
 #define	USB_INIDELAY	10
 #define	USB_TIMEOUT		100
 #define	USB_BUF_LEN		64
@@ -68,7 +69,7 @@ extern	TIM_HandleTypeDef htim7;
 #define	SENSE_1V2_VAL	(ADC_CONVERSION_FACTOR)
 
 #define	RING_BUFFER_MASK	0x0f
-#define	RING_BUFFER_LEN	32
+#define	RING_BUFFER_LEN	48
 
 typedef struct _SystemParametersTypeDef
 {
@@ -138,7 +139,7 @@ typedef struct _SystemTypeDef
 #define	USB_FLAGS_DTR_STATUS	0x01
 #define	USB_FLAGS_RTS_CHANGE	0x04
 #define	USB_FLAGS_DTR_CHANGE	0x08
-// not used						0x10
+#define	USB_FLAGS_MENU_MODE		0x10
 #define	USB_FLAGS_RX_BUF		0x20
 #define	USB_FLAGS_HEADEROK		0x40
 #define	USB_FLAGS_PKTCOMPLETE	0x80
@@ -207,6 +208,7 @@ extern	void MX_USB_Device_Init(void);
 
 #include	"Power_StateMachine.h"
 #include	"USB_Bridge.h"
+#include	"Term_Menus.h"
 #include	"Drivers/Devices/adc_dma.h"
 #include	"Drivers/Devices/irqs.h"
 #include	"Drivers/Devices/ticks.h"

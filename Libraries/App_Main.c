@@ -120,18 +120,15 @@ void App_Loop(void)
 		{
 			CarrierPowerOn();
 			enable_mco();
-			System.system_flags |= USB_ENABLE_FLAG;
 		}
 		else
 		{
-			System.system_flags &= ~USB_ENABLE_FLAG;
 			CarrierPowerOff();
 			hiz_mco();
 		}
 	}
 	else
 	{
-		System.system_flags &= ~USB_ENABLE_FLAG;
 		CarrierPowerOff();
 		hiz_mco();
 	}
