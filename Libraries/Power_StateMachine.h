@@ -15,5 +15,6 @@ extern	void BoardPowerOn(void);
 extern	void BoardPowerOff(void);
 extern	void CarrierPowerOn(void);
 extern	void CarrierPowerOff(void);
+extern	uint8_t PowerStateMachineGetState(void);
 
 #endif /* POWER_STATEMACHINE_H_ */

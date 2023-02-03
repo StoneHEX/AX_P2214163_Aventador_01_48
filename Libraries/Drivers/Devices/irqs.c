@@ -12,12 +12,22 @@
 #include "usbd_cdc.h"
 #include "usbd_cdc_if.h"
 
-#ifdef	UARTRX_IRQ
-
+#ifdef IRQ_MODE
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart)
 {
-	System.uart_flags |= UART_FLAGS_RX_CHAR;
-	TIM7->CNT &= 0x0; // restart the timer
+	if ( huart == &SERIAL_PORT)
+	{
+		System.uart_rx_buf[System.uart_rx_insertion_index] = System.uart_rx_char;
+		System.uart_rx_insertion_index++;
+		System.uart_rx_insertion_index &= UART_BUF_LEN_MASK;
+		System.usb_serial2usb_count_rx++;
+		if ( System.usb_serial2usb_count_rx > MAX_UART2USB_BUF_LEN )
+		{
+			System.usb_serial2usb_count_rx = 0;
+			System.uart_flags |= UART_FLAGS_RX_CHAR;
+		}
+		TIM7->CNT = 0x0;
+	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)

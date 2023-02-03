@@ -13,10 +13,16 @@ static void PrintVersions(void)
 					HW_VERSION,
 					SW_VERSION);
 }
+
 static void PrintVoltages(void)
 {
-	sprintf((char *)System.usb_tx_buf,"** Powers **\n\r1V2: %2.2f\r\n1V8: %2.2f\r\n3V3: %2.2f\r\n5V : %2.2f\r\nVIN: %2.2f\r\n\r\n",
+	if ( PowerStateMachineGetState() == CHECK_FOR_PWRON_PRESSED)
+		sprintf((char *)System.usb_tx_buf,"** Powers are OFF **\n\r1V2: %2.2f\r\n1V8: %2.2f\r\n3V3: %2.2f\r\n5V : %2.2f\r\nVIN: %2.2f\r\n\r\n",
 			System.SENSE_1V2,System.SENSE_1V8,System.SENSE_3V3,System.SENSE_5V,System.SENSE_VIN);
+	else
+		sprintf((char *)System.usb_tx_buf,"** Powers are ON **\n\r1V2: %2.2f\r\n1V8: %2.2f\r\n3V3: %2.2f\r\n5V : %2.2f\r\nVIN: %2.2f\r\n\r\n",
+			System.SENSE_1V2,System.SENSE_1V8,System.SENSE_3V3,System.SENSE_5V,System.SENSE_VIN);
+
 }
 
 static void PrintHelp(void)
@@ -32,12 +38,10 @@ void ClearTerminal(void)
 	HAL_Delay(50);
 }
 
-
 void Term_Menus(void)
 {
 	if (( System.usb_flags & USB_FLAGS_RTS_CHANGE) == USB_FLAGS_RTS_CHANGE)
 	{
-		//ClearTerminal();
 		PrintHelp();
 		HAL_Delay(50);
 		USB_Tx(System.usb_tx_buf);

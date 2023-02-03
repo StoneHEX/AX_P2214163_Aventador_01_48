@@ -33,6 +33,9 @@ extern	TIM_HandleTypeDef htim7;
 #define	USB_TIMEOUT		100
 #define	USB_BUF_LEN		64
 #define	UART_BUF_LEN	128
+#define	UART_BUF_LEN_MASK	(UART_BUF_LEN-1)
+#define	MAX_UART2USB_BUF_LEN	48
+
 
 #define CDC_RX_DATA_SIZE  2048
 #define CDC_TX_DATA_SIZE  2048
@@ -98,10 +101,10 @@ typedef struct _SystemTypeDef
 	uint8_t			usb_rx_buf_index;
 	uint8_t			usb_tx_buf[USB_BUF_LEN];
 	uint8_t			usb_tx_buf_len;
-	uint8_t			usb_buf[USB_BUF_LEN];
-	uint8_t			usb_buf_index;
-	uint8_t			usb_buf_len;
-	uint16_t		usb_timeout;
+	uint8_t			usb_serial2usb_buf[USB_BUF_LEN];
+	uint8_t			usb_serial2usb_buf_len;
+	uint8_t			usb_serial2usb_max_buflen;
+	uint8_t			usb_serial2usb_count_rx;
 	uint8_t			uart_tx_buf[UART_BUF_LEN];
 	uint8_t			uart_rx_buf[UART_BUF_LEN];
 	uint8_t			uart_rx_index;
@@ -214,7 +217,7 @@ extern	void MX_USB_Device_Init(void);
 #include	"Drivers/Devices/ticks.h"
 
 /* devel */
-//#define	UARTRX_IRQ	1
+#define	IRQ_MODE	1
 
 
 #endif /* APP_MAIN_H_ */

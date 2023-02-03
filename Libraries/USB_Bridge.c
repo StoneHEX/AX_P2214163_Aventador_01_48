@@ -60,8 +60,62 @@ void UsbControlCallback(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 	}
 }
 
-uint8_t	max_buflen = 0;
+#ifdef IRQ_MODE
+static void process_serial(void)
+{
+	if ((( System.uart_flags & UART_FLAGS_TOUTRX) == UART_FLAGS_TOUTRX) || (( System.uart_flags & UART_FLAGS_RX_CHAR) == UART_FLAGS_RX_CHAR))
+	{
+		__disable_irq();
+		if (( System.uart_flags & UART_FLAGS_TOUTRX) == UART_FLAGS_TOUTRX)
+			System.uart_flags &= ~UART_FLAGS_TOUTRX;
+		if (( System.uart_flags & UART_FLAGS_RX_CHAR) == UART_FLAGS_RX_CHAR)
+			System.uart_flags &= ~UART_FLAGS_RX_CHAR;
+		__enable_irq();
+		System.usb_serial2usb_buf_len = 0;
+		while(System.uart_rx_extraction_index != System.uart_rx_insertion_index)
+		{
+			System.usb_serial2usb_buf[System.usb_serial2usb_buf_len] = System.uart_rx_buf[System.uart_rx_extraction_index];
+			System.uart_rx_extraction_index++;
+			System.uart_rx_extraction_index &= UART_BUF_LEN_MASK;
+			System.usb_serial2usb_buf_len ++;
+		}
+		if (( System.usb_serial2usb_buf_len  != 0 ) || ( System.usb_serial2usb_buf_len  > (USB_BUF_LEN/2)))
+		{
+			CDC_Transmit_FS(System.usb_serial2usb_buf,System.usb_serial2usb_buf_len );
+			if ( System.usb_serial2usb_buf_len  > System.usb_serial2usb_max_buflen)
+				System.usb_serial2usb_max_buflen = System.usb_serial2usb_buf_len ;
+		}
+	}
+}
 
+void USB_Bridge(void)
+{
+	if (( System.usb_flags & USB_FLAGS_MENU_MODE ) == USB_FLAGS_MENU_MODE)
+	{
+			Term_Menus();
+	}
+	else if ((( System.usb_flags & USB_FLAGS_RTS_STATUS ) == USB_FLAGS_RTS_STATUS) && (( System.usb_flags & USB_FLAGS_RTS_CHANGE) == USB_FLAGS_RTS_CHANGE))
+	{
+		ClearTerminal();
+		System.usb_flags &= ~USB_FLAGS_RTS_CHANGE;
+		System.usb_flags &= ~USB_FLAGS_MENU_MODE;
+	}
+	else
+	{
+		if (( System.usb_flags & USB_FLAGS_RX_BUF) == USB_FLAGS_RX_BUF)
+		{
+			HAL_UART_Transmit_DMA(&SERIAL_PORT, System.usb_rx_buf, System.usb_rx_buf_len);
+			System.usb_flags &= ~USB_FLAGS_RX_BUF;
+		}
+		if ((( System.uart_flags & UART_FLAGS_TOUTRX) == UART_FLAGS_TOUTRX) || (( System.uart_flags & UART_FLAGS_RX_CHAR) == UART_FLAGS_RX_CHAR))
+		{
+			process_serial();
+		}
+		HAL_UART_Receive_IT(&SERIAL_PORT, &System.uart_rx_char, 1);
+	}
+}
+
+#else
 void USB_Bridge(void)
 {
 uint8_t		buflen;
@@ -93,4 +147,5 @@ uint8_t		buflen;
 		}
 	}
 }
+#endif
 

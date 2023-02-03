@@ -19,9 +19,7 @@ static void SetupDefaults(void)
 	HAL_GPIO_WritePin(SLEEP_WAKE_GPIO_Port, SLEEP_WAKE_Pin,GPIO_PIN_RESET);				//external mosfet
 	HAL_GPIO_WritePin(SYS_RESET_OUT_GPIO_Port, SYS_RESET_OUT_Pin,GPIO_PIN_RESET);			//external mosfet
 	HAL_GPIO_WritePin(SEQUENCER_ACTIVE_GPIO_Port, SEQUENCER_ACTIVE_Pin,GPIO_PIN_SET); 	// active low
-
 	System.power_state_machine = IDLE;
-	System.usb_timeout = USB_TIMEOUT;
 }
 
 uint8_t	USB_Tx(uint8_t *buf)
@@ -98,11 +96,10 @@ void App_Init(void)
 	ADC_Start();
 }
 
-//uint8_t count_voltages = 0;
-//uint8_t	vprint = 0;
-
 void App_Loop(void)
 {
+	if ( PowerStateMachineGetState() == CHECK_FOR_PWRON_PRESSED)
+		HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON,PWR_SLEEPENTRY_WFI);
 	App_Timers();
 	if (( System.tick_flags & TICK100ms_FLAG) == TICK100ms_FLAG)
 	{
